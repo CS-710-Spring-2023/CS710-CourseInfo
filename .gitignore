@@ -40,3 +40,6 @@ vignettes/*.pdf
 
 # Notebook html files
 *.html
+
+# Keynote files
+*.key

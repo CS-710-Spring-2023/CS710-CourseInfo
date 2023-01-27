@@ -19,4 +19,4 @@ RStudio is a useful wrapper for R that we'll use in the course. It talks to git,
 
 ## Setting up git and RStudio
 
-To initialize git, please download the RStudio-Github.Rmd in the Instructions folder. 
+To initialize git, please download the RStudio-Github.Rmd in the [Instructions folder](https://github.com/CS-710-Spring-2023/CS710-CourseInfo/tree/main/Instructions). This folder also includes PDF notes on a lecture about version control that might be useful getting started.

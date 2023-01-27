@@ -5,6 +5,8 @@ date: "1/26/2023"
 output: html_notebook
 ---
 
+Please see the Version Control lecture for more information on version control and about git and github. 
+
 ## Setting up git on your computer
 
 RStudio has an open terminal in a tab beside the console. Click over to it and enter the following commands in terminal: 
