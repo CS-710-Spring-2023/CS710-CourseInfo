@@ -1,0 +1,52 @@
+---
+title: "Instructions for Initializing git/Github on RStudio"
+author: "Lindsay Waldrop"
+date: "1/26/2023"
+output: html_notebook
+---
+
+## Setting up git on your computer
+
+RStudio has an open terminal in a tab beside the console. Click over to it and enter the following commands in terminal: 
+
+`git config --global user.name "FIRST_NAME LAST_NAME"`
+`git config --global user.email "MY_NAME@example.com"`
+`git config --global pull.rebase true`
+
+git defaults to vi as a command-line editor. If you have another preference, use: 
+
+`git config --global core.editor EDITOR.NAME`
+
+For additional configure options, see: https://git-scm.com/book/en/v2/Customizing-Git-Git-Configuration 
+
+
+## Setting up git/Gitub on RStudio
+
+First step is to enable version control in RStudio. Open RStudio's preferences by clicking on the menu toolbar "Tools" then "Global Options..." In the left panel, you should see an option for Git/SVN, click on it. Click the check box "Enable version control" at the top. If RStudio complains about not being able to find git, use the Browse... button to find the git executable file (usually in usr or ProgramFiles in the bin folder). Click apply and then close the preferences box. You may need to exit and reopen RStudio for the changes to take effect. 
+
+Run this line only once to install the required packages:
+```{r}
+# Installs required packages
+install.packages(c("usethis", "gitcreds"), 
+                 dependencies = TRUE, repos = "http://cran.us.r-project.org")
+```
+
+Generate and save a personal access token (PAT) using the following code chunks.
+
+Generate the PAT: 
+
+```{r, include=TRUE}
+usethis::create_github_token()
+```
+
+Select the required rights for your token. Click "generate token" . Copy it to your clipboard.
+
+Save the PAT in RStudio: 
+
+```{r, include=TRUE}
+gitcreds::gitcreds_set()
+```
+
+Respond to the prompt by entering your PAT. 
+
+RStudio will only allow you to interface with git and version control inside of R Projects. Try it out by creating a new project (upper right) and selecting version control. 
