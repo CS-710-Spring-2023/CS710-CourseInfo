@@ -43,3 +43,11 @@ vignettes/*.pdf
 
 # Keynote files
 *.key
+
+# latex garbage
+*.tex
+*.aux
+*.log
+*.out
+*.synctex.gz
+*.DS_Store
