@@ -5,3 +5,6 @@ names(data)<-c("year","mn","date.excel","Date","CO2","adjCO2","fit")
 
 plot(data$year[data$mn==6],data$adjCO2[data$mn==6],type="l",xlab="Year",
      ylab="CO2")
+
+
+# Comment
