@@ -51,3 +51,8 @@ vignettes/*.pdf
 *.out
 *.synctex.gz
 *.DS_Store
+
+# image files
+*.png
+*.jpg
+*.jpeg
