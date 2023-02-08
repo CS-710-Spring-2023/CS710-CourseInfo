@@ -1,0 +1,74 @@
+---
+title: "Lecture 4 - The Eye Notebook"
+author: "Lindsay Waldrop"
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+output: html_notebook
+---
+
+```{r setup}
+#new libraries to install: 
+library(ggplot2)
+library(Cairo)
+```
+## The Eye
+
+Code accompanying lecture on the Eye.
+
+### Raster versus Vector graphics in R
+
+
+We'll use the sample plot: 
+```{r}
+ggplot(cars, aes(speed, dist)) + geom_line()
+# store plot as object p
+p <- ggplot(cars, aes(speed, dist)) + geom_line()
+```
+Vector graphics store images as mathematical algorithms, so are not subject to aliasing issues when resizing. However, you need to worry about the color profile format (RGB, HSV, etc), which might alter the actual colors produced. 
+
+```{r}
+# saving as a pdf
+ggsave("vector-plot1.pdf", plot = p, width = 2, height = 1, units = "in")
+```
+
+Raster graphics are better for rendering on lots of different types of devices (including the internet). Different file formats are created for different reasons, but all suffer from aliasing when resized. 
+
+```{r}
+# saving as a png
+ggsave("raster-plot1.png", plot = p, width = 2, height = 1, units = "in")
+
+# saving as a jpg
+ggsave("raster-plot2.jpg", plot = p, width = 2, height = 1, units = "in")
+```
+
+PNG: 
+![png image](raster-plot1.png)
+
+JPG: 
+![jpg image](raster-plot2.jpg)
+
+### Anti-aliasing raster graphics in R
+
+Aliasing can affect raster graphics, but can be mitigated by anti-aliasing with the `Cairo` package. However, if you are using ggplot >= 3.3.4, `ragg` is default and already anti-aliases graphics. Windows users may have to manually anti-alias with Cairo. 
+
+```{r}
+# Save with anti-aliasing 
+ggsave("raster-plot-cairo.png", plot = p, dpi = 300, type = "cairo-png",
+       width = 2, height = 1, units = "in")
+```
+
+
+```{r}
+# Save with aliasing
+png("raster-plot-aliased.png", width = 2, height = 1, units = "in", res = 300, type = "Xlib")
+p
+dev.off()
+```
+
+
+PNG with aliasing: 
+![png with anti-aliasing](raster-plot-aliased.png)
+
+PNG with anti-aliasing: 
+![png with anti-aliasing](raster-plot-cairo.png)
+
+
