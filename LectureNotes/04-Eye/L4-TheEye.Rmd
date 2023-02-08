@@ -9,6 +9,7 @@ output: html_notebook
 #new libraries to install: 
 library(ggplot2)
 library(Cairo)
+library(tidyr)
 ```
 ## The Eye
 
@@ -71,4 +72,15 @@ PNG with aliasing:
 PNG with anti-aliasing: 
 ![png with anti-aliasing](raster-plot-cairo.png)
 
+
+### Luminance and grayscale exercise
+
+```{r}
+data(volcano)
+
+library(reshape)
+volcano.df <- reshape::melt(volcano)
+ggplot(volcano.df, aes(X1, X2, fill=value)) +geom_tile()
+
+```
 
