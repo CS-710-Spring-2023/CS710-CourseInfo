@@ -126,6 +126,12 @@ Use the Orange data set to create a scatterplot with `ggplot2` of circumference 
 ```{r}
 data("Orange")
 
+ggplot(Orange, aes(x = age, y = circumference)) + 
+  geom_point(shape=21, size = 3, color = "orange") +
+  ylab("Circumference (cm)") + xlab("Age (years)") +
+  theme_minimal() + 
+  theme(axis.text.x = element_text(angle = 45, 
+                                   vjust = 0.5, hjust = 0.5))
 ```
 
 
@@ -188,13 +194,19 @@ ggplot(Loblolly.long, aes(x = factor(age), y = Height)) +
 1. Reshape the `fish_encounters` data set (in the `tidyr` package) into a wide format.
 ```{r, include=TRUE}
 data("fish_encounters", package = "tidyr")
-
+fish_wide <- pivot_wider(fish_encounters, 
+                         names_from = "station",
+                         values_from = "seen")
 ```
 
 2. Reshape the `relig_income` data set (in the `tidyr` package) into a long format.
 ```{r, include=TRUE}
 data("relig_income", package = "tidyr")
-
+relig_long <- pivot_longer(relig_income, 
+                           cols = !religion,
+                           names_to = "Income",
+                           values_to = "Count",
+                           names_transform = list("Count"=as.integer))
 ```
 
 ## Adding Data to Existing Plots
@@ -222,7 +234,7 @@ Code accompanying lecture on luminance.
 
 ### Color map exercise
 
-Here, we'll use the volcano data set to plot a color map. 
+Here, we'll use the volcano data set to plot a color map. Make this a grayscale map!
 ```{r}
 data(volcano)
 
@@ -232,7 +244,10 @@ volcano_long <- as.data.frame(volcano) %>%
   transform(Y = as.numeric(Y)) %>%
   transform(X = as.numeric(X))
   
-ggplot(volcano_long, aes(X,Y, fill = value)) + geom_tile()
+p<-ggplot(volcano_long, aes(X, Y, fill = value)) + geom_raster() + 
+  scale_fill_viridis_b() +
+  #scale_fill_gradient(low="gray20",high="gray90")+
+  theme_linedraw()
 
 ```
 
