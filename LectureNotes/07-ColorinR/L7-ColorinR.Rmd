@@ -110,7 +110,7 @@ baseplot + scale_fill_brewer(palette = "Dark2")
 
 #### colorpsace package
 
-Qualitative Color Palettes in R Brewer:
+Qualitative Color Palettes in colorspace:
 ```{r}
 hcl_palettes("qualitative", plot=T)
 ```
