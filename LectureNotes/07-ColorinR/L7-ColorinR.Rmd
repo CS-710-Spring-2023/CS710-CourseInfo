@@ -1,0 +1,247 @@
+---
+title: "Lecture 7 - Color in R Notebook"
+author: "Lindsay Waldrop"
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+output: html_notebook
+---
+
+```{r setup}
+# devtools package installs: 
+# devtools::install_github("katiejolly/nationalparkcolors")
+# devtools::install_github("cdanielcadena/tanagR")
+# devtools::install_github("lindsaywaldrop/munchcolors")
+
+# new libraries to install:
+library(RColorBrewer)
+library(colorspace)
+library(wesanderson)
+library(nationalparkcolors)
+library(tanagR)
+library(munchcolors)
+library(viridis)
+library(maps) 
+library(mapproj) 
+library(dplyr)
+
+
+# Existing libraries to call:
+library(tidyr)
+library(tibble)
+library(ggplot2)
+```
+# Generating color spaces in R
+
+## Some color Palettes available in R
+
+```{r}
+# Base R color palette
+palette()
+```
+
+#### R Color Brewer package
+
+A very versatile package that contains many useful color palettes and functions to generate HEX RGB codes evenly spaced along the palette. More below on when to use each of the different types of palettes. 
+
+```{r}
+display.brewer.all() # Displays a plot of color palettes available in RColorBrewer
+display.brewer.pal(name="BrBG",n=11) # Displays a specific palette by name and specifying a number of colors with n
+brewer.pal(name="BrBG",n=11)  # Displays HEX RGB colors of a specific palette
+
+```
+
+#### colorspace package
+
+A must-have package for anyone visualizing data in R. The colorspace package has many functions including different color palettes, functions to generate HCL, HSV, RGB colors, and functions to simulate color blindness. 
+
+```{r}
+## Code from the Vignette ##
+pal <- function(col, border = "light gray", ...){
+  n <- length(col)
+  plot(0, 0, type="n", xlim = c(0, 1), ylim = c(0, 1),
+       axes = FALSE, xlab = "", ylab = "", ...)
+  rect(0:(n-1)/n, 0, 1:n/n, 1, col = col, border = border)
+}
+hcl_palettes(plot = TRUE)
+```
+
+## Qualitative color palettes
+
+Qualitative color palettes are best used for data that are discrete, unordered, and/or nominal. Colors should be easy to separate (reflective of the discrete data) and unordered. 
+
+Base plot: 
+
+```{r}
+data("WorldPhones")
+phones <- as.data.frame(WorldPhones)
+phones <- pivot_longer(phones, cols = everything())
+
+baseplot<-ggplot(phones,aes(x = name, y = value, fill = name)) +  # Sets aesthetics 
+  geom_point(color="black",size=4,shape=21) +  # specifies mapping
+  xlab("Year") + ylab("Number of phones") + labs(fill="Regions") +
+  theme_bw()   # Sets background to white and lines to black
+
+baseplot
+```
+
+
+Set your own color palette:
+
+```{r}
+# Select the color palette you would like to demo:
+#mypalette <- rainbow_hcl(7, start = 270, end = 150) # Rainbow HCL
+#mypalette <- palette()  # Base R color palette
+mypalette <- c("red", "yellow", "green", "darkblue", "orange", "purple", "white") # User-defined color palette
+
+baseplot + scale_fill_manual(values = mypalette)
+```
+
+#### R Color Brewer
+
+Display of qualitative palettes: 
+```{r}
+display.brewer.all(type = "qual")
+```
+
+Example with ggplot:
+```{r}
+baseplot + scale_fill_brewer(palette = "Dark2")
+```
+
+
+#### colorpsace package
+
+Qualitative Color Palettes in R Brewer:
+```{r}
+hcl_palettes("qualitative", plot=T)
+```
+
+Example with ggplot: 
+```{r}
+baseplot + scale_fill_discrete_qualitative(palette = "Dynamic")
+```
+
+#### Other color palette packages 
+
+The Wes Anderson package contains only qualitative palettes. 
+
+```{r}
+wes_palette("Darjeeling1")
+```
+
+
+```{r}
+baseplot + scale_fill_manual(values=wes_palette(name="BottleRocket1"))
+```
+
+
+The National Parks Color package contains only qualitative palettes. 
+
+```{r}
+park_palette("MtRainier")
+```
+
+```{r}
+baseplot + scale_fill_manual(values = park_palette(name = "CraterLake"))
+```
+
+The Munch colors package contains several diverging palettes: 
+
+```{r}
+pal(munch_palette("StarryNight1",8))
+pal(munch_palette("StarryNight2",7))
+pal(munch_palette("YellowLog",7))
+pal(munch_palette("Murderer",8))
+pal(munch_palette("Nietzsche",8))
+```
+
+```{r}
+baseplot + scale_fill_munch(choice = "Murderer", discrete = TRUE)
+```
+
+
+#### Change background to dark and add high-contrast border around points
+
+```{r}
+mypalette<-c("red","yellow","green","darkblue","orange","purple","white")
+
+ggplot(phones,aes(x = name, y = value, fill = name)) +  
+  geom_point(color="white",size=4,shape=21) +  
+  scale_fill_manual(values=mypalette) +
+  theme(panel.background = element_rect(fill="black",color="black"),
+        panel.grid.major = element_line(color="gray30"),
+        panel.grid.minor = element_line(color="gray20"))
+```
+
+
+
+#### Nominal coding where one code stands out
+
+```{r}
+mypalette<-c(rainbow_hcl(5, start = 270, end = 150),"red") # cool color palette with red
+
+ggplot(mtcars,aes(x=disp,y=mpg,fill=factor(carb))) +  # Sets aesthetics 
+  geom_point(aes(fill=factor(carb),color=factor(carb)),size=4,shape=21) +  # specifies mapping
+  theme_bw() + # Sets background to white and lines to black
+  scale_fill_manual(values=mypalette) + scale_color_manual(values=mypalette)
+
+```
+
+
+## Sequential  color palettes
+
+colorspace provides some nice palette options: 
+```{r}
+# Sequential Color Palettes
+pal(sequential_hcl(12, c = 0, power = 2.2))
+pal(sequential_hcl(12, power = 2.2))
+pal(heat_hcl(12, c = c(80, 30), l = c(30, 90), power = c(1/5, 2)))
+pal(terrain_hcl(12, c = c(65, 0), l = c(45, 90), power = c(1/2, 1.5)))
+pal(rev(heat_hcl(12, h = c(0, -100), c = c(40, 80), l = c(75, 40),power = 1)))
+
+```
+
+
+## Colorspace's colorblind simulator
+
+```{r}
+# Colorspace's color-vision deficiency simulators
+pal(protan(diverging_hcl(7)))  #protan() protanomaly, red-green (missing/defective L cones)
+pal(deutan(diverging_hcl(7)))  #deutan() deutanomaly, green-blind/weak (missing/defective M cones)
+pal(tritan(diverging_hcl(7)))  #tritan() tritanomaly, blue-yellow (missing/defective S)
+```
+
+## Maps and colors 
+
+```{r}
+data(volcano)
+
+volcano_long <- as.data.frame(volcano) %>% 
+  rownames_to_column(var = "Y") %>% 
+  pivot_longer(-Y, names_to = "X", values_to = "value", names_prefix = "V") %>%
+  transform(Y = as.numeric(Y)) %>%
+  transform(X = as.numeric(X))
+
+ggplot(volcano_long, aes(X, Y, fill = value)) + geom_raster() + 
+  scale_fill_gradient(low="gray20",high="gray90")+
+  theme_linedraw()
+
+```
+
+```{r}
+states_map <- map_data("state") #extracts data from the states map
+
+# Make a data set of US crime data from the USArrests data set
+crimes <- data.frame(state = tolower(rownames(USArrests)), USArrests)
+crime_map <- merge(states_map, crimes, by.x = "region", by.y = "state")
+crime_map <- arrange(crime_map, group, order)
+
+# Plot make of murder rate. You can select any column in that 
+basemap <- ggplot(crime_map, aes(x = long, y = lat, group = group, fill = Murder)) +
+  geom_polygon() + coord_map("polyconic") 
+
+# Color map sequential increasing with colorspace
+basemap + scale_fill_continuous_sequential(palette = "Peach")
+
+# Color map diverging from the midpoint (mean murder rate) with colorspace 
+basemap + scale_fill_continuous_diverging(palette = "Blue-Red", mid = mean(crime_map$Murder))
+```
