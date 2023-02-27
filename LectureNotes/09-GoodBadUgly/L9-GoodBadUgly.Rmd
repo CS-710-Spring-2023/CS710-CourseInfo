@@ -13,7 +13,7 @@ library(ggplot2)
 
 ## Assignment
 
-Use the diamonds data set (in ggplot2 package) to answer the following questions (Wilke chapters associated with question):
+Use the diamonds data set (in ggplot2 package) to answer the following questions (Wilke chapters associated with question). (More on the diamonds data set here: https://rpubs.com/GinaMoreno__/course1_4)
 
  1. Are flawless diamonds on average smaller than those with inclusions? (Ch 6)
  2. What is the distribution of price per carat of the diamonds in this set? (Ch 7)
