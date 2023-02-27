@@ -1,0 +1,48 @@
+---
+title: "Lecture 9 - The Good, the Bad, the Ugly Notebook"
+author: "Lindsay Waldrop"
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+output: html_notebook
+---
+
+```{r setup}
+library(ggplot2)
+```
+
+# Lecture 9 Notebook
+
+## Assignment
+
+Use the diamonds data set (in ggplot2 package) to answer the following questions (Wilke chapters associated with question):
+
+ 1. Are flawless diamonds on average smaller than those with inclusions? (Ch 6)
+ 2. What is the distribution of price per carat of the diamonds in this set? (Ch 7)
+ 3. What features determine a diamond’s cost? (Ch 9)
+ 4. What proportion of diamonds in the set are of each cut? Does this change with clarity? (Ch 10, 11)
+ 5. How does depth relate to the price of a diamond? (Ch 12)
+ 
+```{r}
+data("diamonds")
+```
+
+
+Use the beavers data set (base R) to answer the following questions:
+
+ 6. Does the body temperature of a beaver vary with time? (Ch 13, 14)
+ 7. How much variation is associated with beaver temperature measurements?   
+      (Ch 16)
+
+```{r}
+data("beavers")
+# Note that the beavers data set contains two objects: beaver1 and beaver2
+
+```
+ 
+You will be assigned one question number to complete. 
+
+Prepare a graph that best answers the question and post it to the discussion board. Include an explanation of:
+
+ - How your graphics answers the question.
+ - Explain the graphing choices you made for each (how does it follow OCAR?).
+
+Provide code to the rest of the class reproducing your graphs. (Attach your RMD to the discussion post with the image.)
