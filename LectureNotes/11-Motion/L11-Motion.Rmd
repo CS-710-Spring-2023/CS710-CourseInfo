@@ -1,0 +1,111 @@
+---
+title: "Lecture 1 - Motion Notebook"
+author: "Lindsay Waldrop"
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+output: html_notebook
+---
+
+```{r setup}
+# New libraries to install: 
+library(av)
+library(gganimate)
+
+# Existing libraries to call:
+library(ggplot2)
+```
+
+# Motion in R
+
+There are many options for creating motion in R. For a basic plot, simple animation requires frames in succession where movements are broken up in to smaller bits. This code is an example that produces individual PNG images in a folder called anim_plots:
+
+```{r}
+dir.create("anim_plots", showWarnings = FALSE)
+
+dist <- function(x1, x2, n, t) ((x2 - x1)/n)*t
+
+plot_it <- function(dat, dat_old1, dat_old2){
+   p <- ggplot(dat, aes(x, y)) + geom_point() + 
+    geom_point(data = dat_old1, mapping = aes(x, y), alpha = 0.3) +
+    geom_point(data = dat_old2, mapping = aes(x, y), alpha = 0.1) +
+    xlim(0, 1) + ylim(0, 1) + xlab("X") + ylab("Y") + 
+    theme_bw()
+   return(p)
+}
+
+num_pts <- 100
+n_frames <- 100
+
+x1 <- runif(num_pts)
+x2 <- runif(num_pts)
+y1 <- runif(num_pts)
+y2 <- runif(num_pts)
+dat_old1 <- data.frame("x" = x1, "y" = y1)
+dat_old2 <- data.frame("x" = x1, "y" = y1)
+p <- list()
+for (j in 1:n_frames){
+  dat <- data.frame("x" = x1 + dist(x1, x2, n_frames, j), 
+                    "y" = y1 + dist(y1, y2, n_frames, j))
+  p[[j]] <- plot_it(dat, dat_old1, dat_old2)
+  ggsave(filename = paste0("anim_plots/dotmove-", j, ".png"), p[[j]])
+  dat_old2 <- dat_old1
+  dat_old1 <- dat
+}
+  
+```
+
+Stitching these together gives a video of points traveling between two states (x1, y1) and (x2, y2). You can set both the number of frames and the number of points to plot.
+
+## Using the `av` package to create a video
+
+The `av` packages operates with the same functionality as the command-line tool `ffmpeg`. It works directly through R, which makes it useful for dealing with creating videos with R graphics.
+
+Example of encoding video with the previously created PNG files:
+
+```{r include=FALSE}
+png_files <- sprintf("anim_plots/dotmove-%01d.png", 1:100)
+
+av_encode_video(png_files, "av-anim1.mp4", framerate = 30)
+```
+
+It also has the functionality of being able to directly open devices that are used to save videos.
+
+```{r include=FALSE}
+av_capture_graphics(print(p), "av-anim2.mp4", 
+                      1280, 720, res = 300, framerate = 30)
+```
+
+R Bloggers has a good little spot on the `av` package here: <https://www.r-bloggers.com/2018/10/the-av-package-production-quality-video-in-r/>
+
+## Using the `gganimate` package
+
+The tidyverse has its own animate package that works nicely with `ggplot2` which is `gganimate`. It can output gifs and videos and do automatic transitions between ggplot graph elements. More info is here: <https://gganimate.com/>
+
+Examples from the vignette:
+
+```{r}
+p <- ggplot(mtcars, aes(factor(cyl), mpg)) + 
+  geom_boxplot() + 
+  # Here comes the gganimate code
+  transition_states(
+    gear,
+    transition_length = 2,
+    state_length = 1
+  ) +
+  enter_fade() + 
+  exit_shrink() +
+  ease_aes('sine-in-out')
+p
+```
+
+The `anim_save()` function can encode this into a variety of different things.
+
+```{r}
+anim_save("mtcars-anim1.gif", animation = p)
+```
+
+The `av` package also has a nice output renderer that works with `gganimate`:
+
+```{r}
+animate(p, renderer = av_renderer('mtcars-anim2.mp4'), 
+    width = 1280, height = 720, res = 200, fps = 30)
+```
