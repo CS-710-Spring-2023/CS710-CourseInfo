@@ -1,5 +1,5 @@
 ---
-title: "Lecture 1 - Motion Notebook"
+title: "Lecture 11 - Motion Notebook"
 author: "Lindsay Waldrop"
 date: "`r format(Sys.time(), '%B %d, %Y')`"
 output: html_notebook
@@ -33,7 +33,7 @@ plot_it <- function(dat, dat_old1, dat_old2){
 }
 
 num_pts <- 100
-n_frames <- 100
+n_frames <- 60*3
 
 x1 <- runif(num_pts)
 x2 <- runif(num_pts)
@@ -62,9 +62,9 @@ The `av` packages operates with the same functionality as the command-line tool 
 Example of encoding video with the previously created PNG files:
 
 ```{r include=FALSE}
-png_files <- sprintf("anim_plots/dotmove-%01d.png", 1:100)
+png_files <- sprintf("anim_plots/dotmove-%01d.png", 1:180)
 
-av_encode_video(png_files, "av-anim1.mp4", framerate = 30)
+av_encode_video(png_files, "av-anim1.mp4", framerate = 60)
 ```
 
 It also has the functionality of being able to directly open devices that are used to save videos.

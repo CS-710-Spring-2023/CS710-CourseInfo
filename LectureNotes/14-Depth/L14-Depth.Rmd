@@ -1,0 +1,55 @@
+---
+title: "Lecture 14 - Depth Notebook"
+author: "Lindsay Waldrop"
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+output: html_notebook
+---
+
+```{r setup}
+# New libraries to install: 
+library(scatterplot3d)
+```
+
+# Depth Cues
+
+Here are some examples of depth cues using the `scatterplot3d` package: 
+
+```{r}
+
+x <- c(0.5, 0.75, 1)
+y <- c(0.75, 1, 0.5)
+z <- c(3, 4, 5)
+```
+
+No depth cues:
+```{r}
+pdf(file = "nocues.pdf")
+scatterplot3d(x, y, z, xlim = c(0, 2), ylim = c(0, 2), zlim = c(0, 6), pch = 19,
+              box = FALSE, grid = FALSE)
+dev.off()
+```
+
+Perspective Geometry:
+```{r}
+pdf(file = "occlusion.pdf")
+scatterplot3d(x, y, z, xlim = c(0, 2), ylim = c(0, 2), zlim = c(0, 6), pch = 19,
+              box = TRUE, grid = FALSE)
+dev.off()
+```
+
+Grid:
+```{r}
+pdf(file = "grid.pdf")
+scatterplot3d(x, y, z, xlim = c(0, 2), ylim = c(0, 2), zlim = c(0, 6), pch = 19,
+              box = TRUE, grid = TRUE)
+dev.off()
+```
+
+Dropped lines:
+```{r}
+pdf(file = "lines.pdf")
+scatterplot3d(x, y, z, xlim = c(0, 2), ylim = c(0, 2), zlim = c(0, 6), pch = 19,
+              box = TRUE, grid = TRUE, type="h")
+dev.off()
+```
+
