@@ -43,7 +43,7 @@ p_cut <- ggplot(diamonds, aes(x = cut, y = price, color = color, fill = color)) 
   xlab("Diamond cut") + ylab("Diamond Price (USD)") +
   theme_minimal()
 
-p_carat + p_cut
+(p_carat + p_cut) / p_carat
 #ggsave("patchwork_sidebyside.png", last_plot())
  # or 
 
@@ -81,7 +81,7 @@ https://github.com/slowkow/ggrepel
 
 Example from the vignette: 
 ```{r}
-#install.packages("ggrepel")
+install.packages("ggrepel")
 library(ggrepel)
 
 ggplot(mtcars, aes(wt, mpg, label = rownames(mtcars))) +
@@ -98,7 +98,7 @@ ggsave("ggrepel-example.png", last_plot())
 https://github.com/thomasp85/ggraph 
 
 ```{r}
-#install.packages(c("ggraph", "tidygraph"))
+install.packages(c("ggraph", "tidygraph"))
 library(ggraph)
 library(tidygraph)
 
